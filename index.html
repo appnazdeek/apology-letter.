@@ -55,194 +55,133 @@
       overflow: hidden;
       font-family: 'Kalam', 'Noto Sans Devanagari', cursive;
       position: relative;
-      transition: background-color 0.4s ease;
     }
 
     /* ── DYNAMIC BACKGROUNDS ── */
-    .sky-container {
+    #bg-container {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: #3498db;
+      overflow: hidden;
+      animation: colors 10s infinite linear;
       z-index: 0;
+    }
+
+    #asters {
+      position: relative;
+      margin: auto;
+      width: 100px;
+      height: 200%;
+      animation: rotate 10s infinite linear;
+    }
+
+    #stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
     }
 
-    #daySky {
-      background-color: var(--bg-color);
-      z-index: 0;
+    #stars .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background-color: white;
+      animation: starscolors 10s infinite linear;
     }
 
-    #nightSky {
-      background-color: #0f172a;
-      z-index: 1;
-      clip-path: inset(0 0 0 100%);
-    }
-
-    .sun,
-    .moon {
-      cursor: pointer;
-      pointer-events: auto;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    /* DAY SKY */
     .sun {
       position: absolute;
-      top: 10%;
-      left: 10%;
-      width: 90px;
-      height: 90px;
-      background: radial-gradient(circle, #fff3ca, #fde047);
+      top: 20px;
+      width: 100px;
+      height: 100px;
+      background-color: #f1c40f;
       border-radius: 50%;
-      box-shadow: 0 0 50px #fef08a, 0 0 100px rgba(253, 224, 71, 0.6);
-      animation: pulseSun 4s infinite alternate;
+      box-shadow: 0px 0px 21px 1px rgba(241, 196, 15, 1);
+      cursor: pointer;
+      pointer-events: auto;
     }
 
-    @keyframes pulseSun {
-      0% {
-        transform: scale(1);
-        opacity: 0.9;
-      }
-
-      100% {
-        transform: scale(1.05);
-        opacity: 1;
-        box-shadow: 0 0 70px #fef08a, 0 0 140px rgba(253, 224, 71, 0.7);
-      }
-    }
-
-    .sun-rays {
+    .moon {
       position: absolute;
-      top: -10%;
-      left: -10%;
-      width: 250px;
-      height: 250px;
+      bottom: 20px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      background: repeating-conic-gradient(from 0deg, rgba(253, 224, 71, 0.15) 0deg 15deg, transparent 15deg 30deg);
-      animation: spinRays 40s linear infinite;
-      transform-origin: center;
+      border-right: 20px solid #ecf0f1;
+      transform: rotate(30deg);
+      cursor: pointer;
+      pointer-events: auto;
     }
 
-    @keyframes spinRays {
-      100% {
-        transform: rotate(360deg);
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(-359deg);
       }
     }
 
-    .breeze {
-      position: absolute;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-      height: 2px;
-      border-radius: 50%;
-      animation: breezeFlow linear infinite;
-    }
-
-    @keyframes breezeFlow {
+    @keyframes colors {
       0% {
-        transform: translateX(-20vw);
-        opacity: 0;
+        background-color: #3498db;
       }
 
       20% {
-        opacity: 1;
+        background-color: #3498db;
+      }
+
+      30% {
+        background-color: #2c3e50;
+      }
+
+      70% {
+        background-color: #2c3e50;
       }
 
       80% {
-        opacity: 1;
+        background-color: #3498db;
       }
 
       100% {
-        transform: translateX(120vw);
-        opacity: 0;
+        background-color: #3498db;
       }
     }
 
-    /* NIGHT SKY */
-    .moon {
-      position: absolute;
-      top: 12%;
-      right: 12%;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: #fef3c7;
-      box-shadow: 0 0 30px #fde68a, 0 0 80px rgba(253, 230, 138, 0.5);
-      animation: floatMoon 8s ease-in-out infinite alternate;
-    }
-
-    .moon::after {
-      content: '';
-      position: absolute;
-      top: 15px;
-      left: 10px;
-      width: 15px;
-      height: 15px;
-      background: rgba(0, 0, 0, 0.08);
-      border-radius: 50%;
-      box-shadow: 20px 10px 0 -3px rgba(0, 0, 0, 0.06), 10px 25px 0 -5px rgba(0, 0, 0, 0.05);
-    }
-
-    @keyframes floatMoon {
+    @keyframes starscolors {
       0% {
-        transform: translateY(0);
-      }
-
-      100% {
-        transform: translateY(-12px) scale(1.02);
-      }
-    }
-
-    .star {
-      position: absolute;
-      background: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 5px #fff;
-      animation: twinkle ease-in-out infinite alternate;
-    }
-
-    @keyframes twinkle {
-      0% {
-        opacity: 0.1;
-        transform: scale(0.6);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1.3);
-      }
-    }
-
-    .shooting-star {
-      position: absolute;
-      width: 120px;
-      height: 2px;
-      background: linear-gradient(-45deg, rgba(255, 255, 255, 1), transparent);
-      border-radius: 999px;
-      filter: drop-shadow(0 0 4px #fff);
-      animation: shooting linear infinite;
-      opacity: 0;
-    }
-
-    @keyframes shooting {
-      0% {
-        transform: translate(0, 0) rotate(-45deg);
-        opacity: 0;
-      }
-
-      5% {
-        opacity: 1;
-        width: 120px;
+        background-color: #3498db;
       }
 
       20% {
-        opacity: 0;
-        transform: translate(-400px, 400px) rotate(-45deg);
+        background-color: #3498db;
+      }
+
+      30% {
+        background-color: #ffffff;
+      }
+
+      70% {
+        background-color: #ffffff;
+      }
+
+      80% {
+        background-color: #3498db;
       }
 
       100% {
-        opacity: 0;
-        transform: translate(-1000px, 1000px) rotate(-45deg);
+        background-color: #3498db;
       }
     }
+
+
 
     /* ── SCREENS ── */
     .screen {
@@ -685,15 +624,13 @@
 
   <!-- Button removed -->
 
-  <!-- DAY SKY -->
-  <div class="sky-container" id="daySky">
-    <div class="sun-rays"></div>
-    <div class="sun"></div>
-  </div>
-
-  <!-- NIGHT SKY -->
-  <div class="sky-container" id="nightSky">
-    <div class="moon"></div>
+  <!-- BG GLOBE -->
+  <div id="bg-container">
+    <div id="stars"></div>
+    <div id="asters">
+      <div class="sun"></div>
+      <div class="moon"></div>
+    </div>
   </div>
 
   <!-- INTRO -->
@@ -781,83 +718,21 @@
     document.getElementById('handleText').textContent = fromHandle;
     document.querySelector('.outro-sign').textContent = fromHandle;
 
-    // ── 2. DAY/NIGHT TOGGLE & ANIMATION ──
-    let isManualTheme = localStorage.getItem('apologyTheme') !== null;
-    let isDark = localStorage.getItem('apologyTheme') === 'dark';
+    // ── 2. DYNAMIC BACKGROUND EFFECTS (STARS) ──
+    const starsContainer = document.getElementById('stars');
+    const wStr = window.innerWidth;
+    const hStr = window.innerHeight;
 
-    function setNightProgress(percent) {
-      percent = Math.max(0, Math.min(100, percent));
-      document.getElementById('nightSky').style.clipPath = `inset(0 0 0 ${100 - percent}%)`;
-
-      const shouldBeDark = percent > 50;
-      if (shouldBeDark && !document.body.classList.contains('dark-mode')) {
-        document.body.classList.add('dark-mode');
-        isDark = true;
-      } else if (!shouldBeDark && document.body.classList.contains('dark-mode')) {
-        document.body.classList.remove('dark-mode');
-        isDark = false;
-      }
-    }
-
-    if (isManualTheme) {
-      setNightProgress(isDark ? 100 : 0);
-      setTimeout(() => document.getElementById('nightSky').style.transition = 'clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1)', 50);
-    } else {
-      setNightProgress(0);
-      setTimeout(() => document.getElementById('nightSky').style.transition = 'clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1)', 50);
-    }
-
-    document.querySelector('.sun').addEventListener('click', () => {
-      isManualTheme = true;
-      setNightProgress(100);
-      localStorage.setItem('apologyTheme', 'dark');
-    });
-
-    document.querySelector('.moon').addEventListener('click', () => {
-      isManualTheme = true;
-      setNightProgress(0);
-      localStorage.setItem('apologyTheme', 'light');
-    });
-
-    // ── 3. DYNAMIC BACKGROUND EFFECTS ──
-    const daySky = document.getElementById('daySky');
-    const nightSky = document.getElementById('nightSky');
-
-    // Generate Breeze Lines (Day)
-    for (let i = 0; i < 10; i++) {
-      const breeze = document.createElement('div');
-      breeze.className = 'breeze';
-      breeze.style.top = (Math.random() * 80 + 10) + '%';
-      breeze.style.width = (Math.random() * 150 + 80) + 'px';
-      breeze.style.animationDuration = (Math.random() * 6 + 6) + 's';
-      breeze.style.animationDelay = '-' + (Math.random() * 10) + 's';
-      daySky.appendChild(breeze);
-    }
-
-    // Generate Twinkling Stars (Night)
-    for (let i = 0; i < 50; i++) {
+    // Generate 100 stars
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < 100; i++) {
       const star = document.createElement('div');
       star.className = 'star';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = Math.random() * 100 + '%';
-      const size = Math.random() * 3 + 1;
-      star.style.width = size + 'px';
-      star.style.height = size + 'px';
-      star.style.animationDuration = (Math.random() * 2 + 1) + 's';
-      star.style.animationDelay = '-' + (Math.random() * 3) + 's';
-      nightSky.appendChild(star);
+      star.style.top = (Math.random() * hStr) + 'px';
+      star.style.left = (Math.random() * wStr) + 'px';
+      frag.appendChild(star);
     }
-
-    // Generate Shooting Stars (Night)
-    for (let i = 0; i < 4; i++) {
-      const shootingStar = document.createElement('div');
-      shootingStar.className = 'shooting-star';
-      shootingStar.style.left = (Math.random() * 80 + 20) + '%';
-      shootingStar.style.top = (Math.random() * 40 - 10) + '%';
-      shootingStar.style.animationDuration = (Math.random() * 4 + 4) + 's';
-      shootingStar.style.animationDelay = '-' + (Math.random() * 10) + 's';
-      nightSky.appendChild(shootingStar);
-    }
+    starsContainer.appendChild(frag);
 
     document.querySelectorAll('.intro-ghost, .sticker-top, .sticker-bottom, .outro-ghost').forEach(ghost => {
       ghost.addEventListener('click', function (e) {
@@ -976,7 +851,6 @@
     function showAllInstant() {
       clearTimeout(typeTimeout);
       isTyping = false;
-      if (!isManualTheme) setNightProgress(100);
       document.getElementById('skipBtn').classList.add('hidden');
       for (let i = 0; i < TOTAL; i++) {
         const textEl = document.getElementById('t' + i);
@@ -1022,7 +896,6 @@
         } else {
           const cur = textEl.querySelector('.cursor');
           if (cur) cur.remove();
-          if (!isManualTheme) setNightProgress(((idx + 1) / TOTAL) * 100);
           typeTimeout = setTimeout(() => typeParagraph(idx + 1), 320);
         }
       }
