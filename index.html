@@ -87,6 +87,17 @@
       background: rgba(0, 0, 0, 0.4);
     }
 
+    .theme-toggle img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      transition: filter 0.3s;
+    }
+
+    .dark-mode .theme-toggle img {
+      filter: invert(1);
+    }
+
     /* ── PETALS ── */
     .petals-container {
       position: fixed;
@@ -545,7 +556,7 @@
       type="audio/mpeg">
   </audio>
 
-  <button class="theme-toggle" id="themeToggle" title="Toggle Theme">🌙</button>
+  <button class="theme-toggle" id="themeToggle" title="Toggle Theme"></button>
 
   <div class="petals-container" id="petalsContainer"></div>
 
@@ -637,13 +648,21 @@
     // ── 2. DARK MODE THEME TOGGLE ──
     const themeToggle = document.getElementById('themeToggle');
     let isDark = localStorage.getItem('apologyTheme') === 'dark';
+
+    const iconSun = 'https://img.icons8.com/?size=100&id=64194&format=png&color=000000';
+    const iconMoon = 'https://img.icons8.com/?size=100&id=64215&format=png&color=000000';
+
     if (isDark) document.body.classList.add('dark-mode');
-    themeToggle.textContent = isDark ? '☀️' : '🌙';
+
+    function updateThemeIcon() {
+      themeToggle.innerHTML = `<img src="${isDark ? iconSun : iconMoon}" alt="Theme Icon">`;
+    }
+    updateThemeIcon();
 
     themeToggle.addEventListener('click', () => {
       isDark = !isDark;
       document.body.classList.toggle('dark-mode', isDark);
-      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      updateThemeIcon();
       localStorage.setItem('apologyTheme', isDark ? 'dark' : 'light');
     });
 
