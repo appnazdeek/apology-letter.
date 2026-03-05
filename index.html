@@ -1,16 +1,52 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>A Heartfelt Sorry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&family=Crafty+Girls&family=Kalam:wght@300;400;700&family=Lilita+One&family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&family=Crafty+Girls&family=Kalam:wght@300;400;700&family=Lilita+One&family=Noto+Sans+Devanagari:wght@400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { height: 100%; }
+    :root {
+      --bg-color: rgb(255, 216, 235);
+      --text-main: #2d2d2d;
+      --text-title: #c0396d;
+      --text-sub: #7a4a5a;
+      --text-salutation: #333;
+      --btn-bg: #d63f7b;
+      --btn-shadow: rgba(214, 63, 123, 0.3);
+      --box-bg: white;
+      --box-shadow: rgba(0, 0, 0, 0.07);
+    }
+
+    .dark-mode {
+      --bg-color: #0f172a;
+      --text-main: #cbd5e1;
+      --text-title: #f472b6;
+      --text-sub: #94a3b8;
+      --text-salutation: #e2e8f0;
+      --btn-bg: #be185d;
+      --btn-shadow: rgba(190, 24, 93, 0.3);
+      --box-bg: #1e293b;
+      --box-shadow: rgba(0, 0, 0, 0.5);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      height: 100%;
+    }
 
     body {
-      background-color: rgb(255, 216, 235);
+      background-color: var(--bg-color);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -19,11 +55,39 @@
       overflow: hidden;
       font-family: 'Kalam', 'Noto Sans Devanagari', cursive;
       position: relative;
+      transition: background-color 0.4s ease;
     }
 
-    /* ════════════════════════════
-       FLOATING PETALS BACKGROUND
-    ════════════════════════════ */
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.4);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      z-index: 100;
+      backdrop-filter: blur(5px);
+      transition: transform 0.2s, background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .dark-mode .theme-toggle {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* ── PETALS ── */
     .petals-container {
       position: fixed;
       inset: 0;
@@ -31,24 +95,37 @@
       z-index: 0;
       overflow: hidden;
     }
+
     .petal {
       position: absolute;
       top: -40px;
-      font-size: 1.1rem;
       opacity: 0;
       animation: floatDown linear infinite;
       user-select: none;
-    }
-    @keyframes floatDown {
-      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
-      10%  { opacity: 0.55; }
-      90%  { opacity: 0.4; }
-      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+      will-change: transform;
     }
 
-    /* ════════════════════════════
-       SCREENS
-    ════════════════════════════ */
+    @keyframes floatDown {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.6;
+      }
+
+      90% {
+        opacity: 0.4;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(300deg);
+        opacity: 0;
+      }
+    }
+
+    /* ── SCREENS ── */
     .screen {
       position: absolute;
       inset: 0;
@@ -59,94 +136,133 @@
       transition: opacity 0.6s ease, transform 0.6s ease;
       z-index: 1;
     }
+
     .screen.hidden {
       opacity: 0;
       pointer-events: none;
       transform: scale(0.97);
     }
 
-    /* ════════════════════════════
-       INTRO SCREEN
-    ════════════════════════════ */
+    /* ── INTRO ── */
     #introScreen {
-      padding: 30px 24px;
+      padding: 30px 28px;
       text-align: center;
-      gap: 0;
     }
 
     .intro-ghost {
-      width: 130px;
+      width: 120px;
       animation: ghostFloat 3s ease-in-out infinite;
-      filter: drop-shadow(0 8px 16px rgba(214,63,123,0.2));
-      margin-bottom: 6px;
+      filter: drop-shadow(0 8px 16px rgba(214, 63, 123, 0.15));
+      margin-bottom: 8px;
+      cursor: pointer;
     }
+
     @keyframes ghostFloat {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-12px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* GHOST BOUNCE INTERACTION */
+    .ghost-bounce {
+      animation: bounceQuick 0.4s ease !important;
+    }
+
+    @keyframes bounceQuick {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-20px) scale(1.1);
+      }
     }
 
     .intro-tag {
       font-family: 'Crafty Girls', cursive;
-      font-size: 1rem;
-      color: #d63f7b;
-      opacity: 0.7;
-      margin-bottom: 14px;
+      font-size: 0.95rem;
+      color: var(--text-title);
+      opacity: 0.8;
+      margin-bottom: 12px;
       animation: fadeInUp 0.8s ease 0.3s both;
     }
 
     .intro-title {
       font-family: 'Lilita One', cursive;
-      font-size: 2rem;
-      color: #c0396d;
-      line-height: 1.3;
-      margin-bottom: 10px;
+      font-size: 1.75rem;
+      color: var(--text-title);
+      line-height: 1.35;
+      margin-bottom: 12px;
       animation: fadeInUp 0.8s ease 0.5s both;
     }
 
     .intro-sub {
-      font-family: 'Kalam', cursive;
-      font-size: 1rem;
-      color: #7a4a5a;
-      margin-bottom: 36px;
-      line-height: 1.6;
+      font-family: 'Kalam', 'Noto Sans Devanagari', cursive;
+      font-size: 0.98rem;
+      color: var(--text-sub);
+      margin-bottom: 34px;
+      line-height: 1.7;
       animation: fadeInUp 0.8s ease 0.7s both;
     }
 
     .intro-btn {
-      background: #d63f7b;
+      background: var(--btn-bg);
       color: white;
       border: none;
       border-radius: 50px;
-      padding: 14px 38px;
+      padding: 13px 36px;
       font-family: 'Lilita One', cursive;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(214,63,123,0.35);
-      animation: fadeInUp 0.8s ease 1s both, pulse 2s ease-in-out 2s infinite;
+      box-shadow: 0 6px 20px var(--btn-shadow);
+      animation: fadeInUp 0.8s ease 1s both, softPulse 2.5s ease-in-out 2s infinite;
       transition: transform 0.15s;
     }
-    .intro-btn:active { transform: scale(0.96); }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 6px 20px rgba(214,63,123,0.35); }
-      50%       { box-shadow: 0 8px 28px rgba(214,63,123,0.55); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
+
+    .intro-btn:active {
+      transform: scale(0.95);
     }
 
-    /* ════════════════════════════
-       LETTER SCREEN
-    ════════════════════════════ */
+    @keyframes softPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 6px 20px var(--btn-shadow);
+      }
+
+      50% {
+        box-shadow: 0 8px 26px var(--btn-shadow);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── LETTER SCREEN ── */
     #letterScreen {
       position: absolute;
       inset: 0;
       display: flex;
       flex-direction: column;
       padding: max(env(safe-area-inset-top), 16px) 16px max(env(safe-area-inset-bottom), 12px);
-      transition: opacity 0.6s ease;
     }
-    #letterScreen.hidden { opacity: 0; pointer-events: none; }
 
     .top-area {
       display: flex;
@@ -155,23 +271,27 @@
       flex-shrink: 0;
       padding-bottom: 8px;
     }
+
     .sticker-top {
       width: 88px;
       flex-shrink: 0;
       object-fit: contain;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+      cursor: pointer;
     }
+
     .headline-box {
-      background: white;
+      background: var(--box-bg);
       border-radius: 16px;
       padding: 12px 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      box-shadow: 0 2px 12px var(--box-shadow);
       flex: 1;
     }
+
     .headline-box p {
       font-family: 'Crafty Girls', cursive;
       font-size: 1.15rem;
-      color: #c0396d;
+      color: var(--text-title);
       line-height: 1.55;
     }
 
@@ -181,10 +301,11 @@
       padding: 5px 0 6px;
       flex-shrink: 0;
     }
+
     .skip-btn {
       background: transparent;
-      border: 1.5px solid #d63f7b;
-      color: #d63f7b;
+      border: 1.5px solid var(--btn-bg);
+      color: var(--btn-bg);
       border-radius: 50px;
       padding: 3px 14px;
       font-family: 'Kalam', cursive;
@@ -193,8 +314,17 @@
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
     }
-    .skip-btn:hover, .skip-btn:active { background: #d63f7b; color: white; }
-    .skip-btn.hidden { visibility: hidden; pointer-events: none; }
+
+    .skip-btn:hover,
+    .skip-btn:active {
+      background: var(--btn-bg);
+      color: white;
+    }
+
+    .skip-btn.hidden {
+      visibility: hidden;
+      pointer-events: none;
+    }
 
     .letter-scroll {
       flex: 1;
@@ -205,17 +335,25 @@
       scrollbar-color: #f4a0c0 transparent;
       min-height: 0;
     }
-    .letter-scroll::-webkit-scrollbar { width: 3px; }
-    .letter-scroll::-webkit-scrollbar-thumb { background: #f4a0c0; border-radius: 4px; }
+
+    .letter-scroll::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .letter-scroll::-webkit-scrollbar-thumb {
+      background: #f4a0c0;
+      border-radius: 4px;
+    }
 
     .salutation {
       font-family: 'Kalam', 'Noto Sans Devanagari', cursive;
       font-size: 1rem;
       font-weight: 700;
-      color: #333;
+      color: var(--text-salutation);
       margin-bottom: 12px;
       padding: 0 2px;
     }
+
     .para-block {
       display: flex;
       align-items: flex-start;
@@ -225,44 +363,63 @@
       transition: opacity 0.35s;
       padding: 0 2px;
     }
-    .para-block.visible { opacity: 1; }
+
+    .para-block.visible {
+      opacity: 1;
+    }
+
     .bullet-dot {
       flex-shrink: 0;
-      width: 6px; height: 6px;
-      background: #d63f7b;
+      width: 6px;
+      height: 6px;
+      background: var(--btn-bg);
       border-radius: 50%;
       margin-top: 10px;
     }
+
     .para-text {
       font-family: 'Kalam', 'Noto Sans Devanagari', cursive;
       font-size: 0.97rem;
       font-weight: 400;
-      color: #2d2d2d;
+      color: var(--text-main);
       line-height: 1.9;
       flex: 1;
     }
+
     .letter-sign {
       opacity: 0;
       transition: opacity 0.4s;
       padding: 8px 2px 4px;
       font-family: 'Kalam', cursive;
       font-size: 1rem;
-      color: #444;
+      color: var(--text-salutation);
       line-height: 1.7;
     }
-    .letter-sign.visible { opacity: 1; }
+
+    .letter-sign.visible {
+      opacity: 1;
+    }
 
     .cursor {
       display: inline-block;
-      width: 2px; height: 1em;
-      background: #d63f7b;
+      width: 2px;
+      height: 1em;
+      background: var(--btn-bg);
       margin-left: 1px;
       vertical-align: middle;
       animation: blink 0.7s infinite;
     }
+
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
     }
 
     .bottom-area {
@@ -272,124 +429,128 @@
       gap: 10px;
       padding-top: 8px;
       flex-shrink: 0;
-      border-top: 1px solid rgba(214,63,123,0.15);
+      border-top: 1px solid rgba(214, 63, 123, 0.15);
       margin-top: 4px;
       min-height: 68px;
     }
+
     .sticker-bottom {
       width: 56px;
       object-fit: contain;
-      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.08));
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.08));
+      cursor: pointer;
     }
+
     .handle-text {
       font-family: 'Corinthia', cursive;
       font-size: 1.9rem;
       font-weight: 700;
-      color: #c0396d;
+      color: var(--text-title);
       line-height: 1;
     }
 
-    /* ════════════════════════════
-       OUTRO SCREEN
-    ════════════════════════════ */
+    /* ── OUTRO ── */
     #outroScreen {
       padding: 30px 28px;
       text-align: center;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .outro-hearts {
-      font-size: 2.5rem;
-      margin-bottom: 16px;
-      animation: heartPop 0.6s ease both;
-    }
-    @keyframes heartPop {
-      0%   { transform: scale(0); opacity: 0; }
-      70%  { transform: scale(1.15); }
-      100% { transform: scale(1); opacity: 1; }
     }
 
     .outro-ghost {
       width: 90px;
       margin-bottom: 16px;
       animation: ghostFloat 3s ease-in-out infinite;
-      filter: drop-shadow(0 6px 14px rgba(214,63,123,0.2));
+      filter: drop-shadow(0 6px 14px rgba(214, 63, 123, 0.15));
+      cursor: pointer;
     }
 
     .outro-title {
       font-family: 'Lilita One', cursive;
-      font-size: 1.6rem;
-      color: #c0396d;
-      margin-bottom: 12px;
+      font-size: 1.55rem;
+      color: var(--text-title);
+      margin-bottom: 14px;
       animation: fadeInUp 0.7s ease 0.2s both;
     }
 
     .outro-msg {
       font-family: 'Kalam', 'Noto Sans Devanagari', cursive;
       font-size: 1rem;
-      color: #6a3a4a;
-      line-height: 1.75;
-      margin-bottom: 28px;
+      color: var(--text-sub);
+      line-height: 1.85;
+      margin-bottom: 22px;
       animation: fadeInUp 0.7s ease 0.4s both;
     }
 
-    .outro-flowers {
-      font-size: 1.6rem;
-      letter-spacing: 6px;
+    .outro-divider {
+      font-size: 1.3rem;
+      letter-spacing: 8px;
+      margin-bottom: 18px;
       animation: fadeInUp 0.7s ease 0.6s both;
-      margin-bottom: 24px;
     }
 
     .outro-sign {
       font-family: 'Corinthia', cursive;
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       font-weight: 700;
-      color: #d63f7b;
+      color: var(--btn-bg);
       animation: fadeInUp 0.7s ease 0.8s both;
     }
 
-    /* floating hearts on outro */
-    .float-heart {
+    .float-blessing {
       position: fixed;
-      font-size: 1.4rem;
       pointer-events: none;
-      animation: floatHeart 3s ease-out forwards;
+      animation: floatUp 3.5s ease-out forwards;
       z-index: 10;
+      font-size: 1.3rem;
     }
-    @keyframes floatHeart {
-      0%   { opacity: 1; transform: translateY(0) scale(1); }
-      100% { opacity: 0; transform: translateY(-120px) scale(0.5); }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-130px) scale(0.6);
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <!-- FLOATING PETALS -->
+  <!-- BG AUDIO -->
+  <audio id="bgMusic" loop>
+    <source
+      src="https://cdn.pixabay.com/download/audio/2022/07/25/audio_13ea4b89cc.mp3?filename=emotional-piano-sad-background-music-for-videos-9311.mp3"
+      type="audio/mpeg">
+  </audio>
+
+  <button class="theme-toggle" id="themeToggle" title="Toggle Theme">🌙</button>
+
   <div class="petals-container" id="petalsContainer"></div>
 
-  <!-- ══ INTRO ══ -->
+  <!-- INTRO -->
   <div class="screen" id="introScreen">
-    <img class="intro-ghost"
-      src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/one.png"
+    <img class="intro-ghost" src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/one.png"
       alt="ghost" />
-    <p class="intro-tag">एक छोटी सी बात...</p>
-    <h1 class="intro-title">दिल से एक<br/>ज़रूरी बात 💌</h1>
+    <p class="intro-tag">एक ज़रूरी बात आपसे...</p>
+    <h1 class="intro-title"><span id="nameIntro">आंटी जी</span>,<br />दिल से माफी 🙏</h1>
     <p class="intro-sub">
-      कुछ बातें जो मन में थीं,<br/>
-      आज कहनी हैं आपसे।
+      कुछ बातें हैं जो मैं<br />
+      आपसे सीधे कहना चाहता हूँ।<br />
+      बस एक बार पढ़ लीजिए।
     </p>
     <button class="intro-btn" id="startBtn">पढ़ें ✨</button>
   </div>
 
-  <!-- ══ LETTER ══ -->
+  <!-- LETTER -->
   <div class="screen hidden" id="letterScreen">
     <div class="top-area">
-      <img class="sticker-top"
-        src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/one.png"
+      <img class="sticker-top" src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/one.png"
         alt="sorry ghost" />
       <div class="headline-box">
-        <p>A heartfelt sorry,<br/>I meant no hurt.</p>
+        <p>A heartfelt sorry,<br />I meant no hurt.</p>
       </div>
     </div>
 
@@ -398,7 +559,7 @@
     </div>
 
     <div class="letter-scroll" id="letterScroll">
-      <p class="salutation">नमस्ते आंटी जी,</p>
+      <p class="salutation">नमस्ते <span id="nameLetter">आंटी जी</span>,</p>
 
       <div class="para-block" id="p0"><span class="bullet-dot"></span><span class="para-text" id="t0"></span></div>
       <div class="para-block" id="p1"><span class="bullet-dot"></span><span class="para-text" id="t1"></span></div>
@@ -413,163 +574,222 @@
       <div class="para-block" id="p10"><span class="bullet-dot"></span><span class="para-text" id="t10"></span></div>
 
       <div class="letter-sign" id="letterSign">
-        धन्यवाद,<br/>राकेश
+        धन्यवाद,<br /><span id="nameSign">राकेश</span>
       </div>
     </div>
 
     <div class="bottom-area">
-      <img class="sticker-bottom"
-        src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/two.png"
+      <img class="sticker-bottom" src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/two.png"
         alt="ghost with flower" />
-      <span class="handle-text">@rakeshsingh.tce</span>
+      <span class="handle-text" id="handleText">@rakeshsingh.tce</span>
     </div>
   </div>
 
-  <!-- ══ OUTRO ══ -->
+  <!-- OUTRO -->
   <div class="screen hidden" id="outroScreen">
-    <div class="outro-hearts">💗</div>
-    <img class="outro-ghost"
-      src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/two.png"
+    <img class="outro-ghost" src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/two.png"
       alt="ghost" />
-    <h2 class="outro-title">सब ठीक हो जाएगा 🌸</h2>
+    <h2 class="outro-title">बस यही दुआ है 🙏</h2>
     <p class="outro-msg">
-      आपके घर में खुशियाँ हों,<br/>
-      आपके परिवार में हमेशा<br/>
-      मुस्कुराहट बनी रहे।<br/><br/>
-      यह छोटी सी कोशिश थी<br/>
-      मन की बात पहुँचाने की। 🙏
+      आपके परिवार में हमेशा<br />
+      खुशियाँ और अच्छाई बनी रहे।<br /><br />
+      मेरी नीयत साफ थी,<br />
+      और हमेशा रहेगी।<br /><br />
+      आपका आशीर्वाद मिले —<br />
+      इससे बड़ी बात कोई नहीं।
     </p>
-    <div class="outro-flowers">🌸 🌼 🌸</div>
-    <div class="outro-sign">@rakeshsingh.tce</div>
+    <div class="outro-divider">🌸 🙏 🌸</div>
+    <div class="outro-sign"></div>
   </div>
 
-<script>
-  // ── Petals ──
-  const petalEmojis = ['🌸','🌼','✿','❀','💮'];
-  const container = document.getElementById('petalsContainer');
-  for (let i = 0; i < 18; i++) {
-    const p = document.createElement('span');
-    p.className = 'petal';
-    p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
-    p.style.left = Math.random() * 100 + '%';
-    p.style.fontSize = (0.7 + Math.random() * 0.8) + 'rem';
-    p.style.animationDuration = (6 + Math.random() * 10) + 's';
-    p.style.animationDelay = (Math.random() * 12) + 's';
-    container.appendChild(p);
-  }
+  <script>
+    // ── 1. DYNAMIC NAMES PARSING (URL PARAMS) ──
+    const urlParams = new URLSearchParams(window.location.search);
+    const toName = urlParams.get('to') || 'आंटी जी';
+    const fromName = urlParams.get('from') || 'राकेश';
+    const fromHandle = urlParams.get('handle') || '@rakeshsingh.tce';
 
-  // ── Screen transitions ──
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-  }
+    document.getElementById('nameIntro').textContent = toName;
+    document.getElementById('nameLetter').textContent = toName;
+    document.getElementById('nameSign').textContent = fromName;
+    document.getElementById('handleText').textContent = fromHandle;
+    document.querySelector('.outro-sign').textContent = fromHandle;
 
-  document.getElementById('startBtn').addEventListener('click', () => {
-    showScreen('letterScreen');
-    setTimeout(() => typeParagraph(0), 400);
-  });
+    // ── 2. DARK MODE THEME TOGGLE ──
+    const themeToggle = document.getElementById('themeToggle');
+    let isDark = localStorage.getItem('apologyTheme') === 'dark';
+    if (isDark) document.body.classList.add('dark-mode');
+    themeToggle.textContent = isDark ? '☀️' : '🌙';
 
-  // ── Letter ──
-  const parts = [
-    "सबसे पहले मैं आपसे दिल से माफी मांगना चाहता हूँ। कुछ महीने पहले मेरे इंस्टाग्राम अकाउंट पर एक AI-generated फोटो थी जिसमें आपकी बेटी की फोटो का इस्तेमाल हो गया था। मुझे समझ है कि यह चीज आपको बिल्कुल अच्छी नहीं लगी होगी और इससे आपको गुस्सा या असहज महसूस हुआ होगा। इसके लिए मैं sincerely आपसे sorry कहना चाहता हूँ।",
-    "मैं एक बात साफ करना चाहता हूँ कि मेरा intention बिल्कुल भी गलत नहीं था। वह फोटो मैंने कहीं भी publicly share नहीं की थी। मेरा Instagram account private है और वहाँ practically कोई और access भी नहीं था। वह बस मेरे अकाउंट पर एक पोस्ट के रूप में पड़ी हुई थी। फिर भी अगर उस वजह से आपको या आपके परिवार को बुरा लगा, तो उसकी पूरी responsibility मैं लेता हूँ और उसके लिए दिल से माफी मांगता हूँ।",
-    "आंटी जी, मैं आपकी बेटी और आपके पूरे परिवार की बहुत respect करता हूँ। मैं ऐसा लड़का नहीं हूँ जो आजकल के कुछ temporary relationships की तरह किसी के साथ थोड़े समय के लिए जुड़कर बाद में सब खत्म कर दे। मेरा mindset वैसा बिल्कुल नहीं है। अगर मेरे मन में किसी के लिए सम्मान या पसंद होती है तो वह चीज serious और respectful तरीके से ही होती है, कोई time-pass या temporary feeling नहीं होती।",
-    "मैं आपको अपने बारे में थोड़ा सा बताना चाहता हूँ ताकि आपको समझ आ सके कि मैं कैसा इंसान हूँ। मैं अभी अपने career पर focus कर रहा हूँ और पिछले काफी समय से अपने काम और अपने future को बनाने में लगा हुआ हूँ। मैं software engineering और technology से जुड़ा हुआ हूँ और अपना startup build करने पर काम कर रहा हूँ। मैं एक first-generation entrepreneur बनने की कोशिश कर रहा हूँ, इसलिए अभी मेरी life का बड़ा हिस्सा struggle, learning और hard work में जा रहा है।",
-    "मेरी lifestyle भी simple है। मुझे ना smoking की आदत है, ना drinking की और ना ही किसी गलत संगत में रहने की आदत है। मैं अपना ज़्यादातर समय सीखने, काम करने और अपने skills को improve करने में लगाता हूँ। गाँव में रहने के बावजूद मैं हमेशा कोशिश करता हूँ कि मेरा mindset positive और progressive रहे।",
-    "आपकी बेटी की बहन अंशिका से मेरी कुछ समय तक chat हुई थी, जिसमें मैंने उन्हें अपने बारे में काफी कुछ बताया था। उन्होंने मुझसे कई बातें पूछी थीं और मैंने उन्हें honestly जवाब दिया था। इसलिए अगर कभी आपको मेरे बारे में कुछ जानना हो तो आप उनसे भी पूछ सकती हैं, क्योंकि उन्होंने मेरे साथ काफी बातचीत की है।",
-    "एक और बात मैं बिल्कुल साफ करना चाहता हूँ। फिलहाल मेरा ऐसा कोई plan नहीं है कि मैं अभी किसी relationship के बारे में बात करूँ या किसी को किसी तरह की परेशानी में डालूँ। अभी मेरी priority सिर्फ अपना career बनाना, अपने परिवार की स्थिति को बेहतर करना और खुद को financially और personally strong बनाना है।",
-    "इसलिए अभी मैं सिर्फ अपनी गलती के लिए आपसे माफी मांगना चाहता हूँ। भविष्य में जब मैं अपनी life में stable हो जाऊँगा, अपने काम में successful हो जाऊँगा और जब समय सही होगा, तभी मैं किसी भी बात को लेकर आगे सोचूँगा। अभी के समय में मेरा focus सिर्फ मेहनत करना और खुद को बेहतर बनाना है।",
-    "आंटी जी, अगर मेरे इस message में लिखी किसी भी बात से आपको बुरा लगे या आपको ऐसा लगे कि मुझे यह message नहीं भेजना चाहिए था, तो उसके लिए भी मैं पहले से ही माफी चाहता हूँ। मेरा मकसद सिर्फ इतना है कि आपके मन में अगर मेरे लिए कोई गलतफहमी बन गई है तो उसे clear कर सकूँ।",
-    "आपका गुस्सा बिल्कुल समझ में आता है और आपकी जगह कोई भी माता-पिता होते तो शायद वही महसूस करते। इसलिए मैं एक बार फिर sincerely आपसे sorry कहना चाहता हूँ।",
-    "उम्मीद है कि आगे चलकर सब ठीक हो जाएगा और आपके मन में कोई गिला-शिकवा नहीं रहेगा। आपके घर में हमेशा खुशियाँ बनी रहें — यही मेरी दिल से दुआ है। 🌸"
-  ];
+    themeToggle.addEventListener('click', () => {
+      isDark = !isDark;
+      document.body.classList.toggle('dark-mode', isDark);
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('apologyTheme', isDark ? 'dark' : 'light');
+    });
 
-  const TOTAL = parts.length;
-  let isTyping = false;
-  let typeTimeout = null;
-  const scroll = document.getElementById('letterScroll');
-
-  let autoScrollEnabled = true;
-  let userTouching = false;
-  let wheelTimer = null;
-
-  scroll.addEventListener('touchstart', () => {
-    userTouching = true;
-    autoScrollEnabled = false;
-  }, { passive: true });
-  scroll.addEventListener('touchend', () => {
-    userTouching = false;
-    autoScrollEnabled = true;
-  }, { passive: true });
-  scroll.addEventListener('wheel', () => {
-    autoScrollEnabled = false;
-    clearTimeout(wheelTimer);
-    wheelTimer = setTimeout(() => { autoScrollEnabled = true; }, 1000);
-  }, { passive: true });
-
-  function autoScroll() {
-    if (autoScrollEnabled) scroll.scrollTop = scroll.scrollHeight;
-  }
-
-  function showAllInstant() {
-    clearTimeout(typeTimeout);
-    isTyping = false;
-    document.getElementById('skipBtn').classList.add('hidden');
-    for (let i = 0; i < TOTAL; i++) {
-      const textEl = document.getElementById('t' + i);
-      const cur = textEl.querySelector('.cursor');
-      if (cur) cur.remove();
-      textEl.textContent = parts[i];
-      document.getElementById('p' + i).classList.add('visible');
+    // ── 3. PETALS & INTERACTIVITY ──
+    const petalEmojis = ['🌸', '🌼', '✿', '🌺'];
+    const container = document.getElementById('petalsContainer');
+    for (let i = 0; i < 16; i++) {
+      const p = document.createElement('span');
+      p.className = 'petal';
+      p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+      p.style.left = Math.random() * 100 + '%';
+      p.style.fontSize = (0.6 + Math.random() * 0.7) + 'rem';
+      p.style.animationDuration = (7 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 14) + 's';
+      container.appendChild(p);
     }
-    document.getElementById('letterSign').classList.add('visible');
-    scroll.scrollTop = scroll.scrollHeight;
-    setTimeout(showOutro, 800);
-  }
 
-  // Floating hearts burst on outro
-  function burstHearts() {
-    const emojis = ['💗','🌸','✨','💕','🌼'];
-    for (let i = 0; i < 12; i++) {
-      setTimeout(() => {
-        const h = document.createElement('span');
-        h.className = 'float-heart';
-        h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        h.style.left = (15 + Math.random() * 70) + '%';
-        h.style.bottom = (10 + Math.random() * 40) + '%';
-        h.style.animationDelay = (Math.random() * 0.5) + 's';
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 3500);
-      }, i * 120);
+    document.addEventListener('mousemove', (e) => {
+      document.querySelectorAll('.petal').forEach(p => {
+        const rect = p.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 60) {
+          const moveX = (dx / dist) * -30;
+          p.style.transform = `translate(${moveX}px, 0) scale(1.1) rotate(${Math.random() * 360}deg)`;
+          p.style.transition = 'transform 0.2s ease-out';
+          setTimeout(() => p.style.transform = '', 300);
+        }
+      });
+    });
+
+    document.querySelectorAll('.intro-ghost, .sticker-top, .sticker-bottom, .outro-ghost').forEach(ghost => {
+      ghost.addEventListener('click', function () {
+        this.classList.add('ghost-bounce');
+        setTimeout(() => this.classList.remove('ghost-bounce'), 400);
+      });
+    });
+
+    // ── 4. SCREENS & AUDIO ──
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
     }
-  }
 
-  function showOutro() {
-    showScreen('outroScreen');
-    burstHearts();
-  }
+    const bgMusic = document.getElementById('bgMusic');
 
-  function typeParagraph(idx) {
-    isTyping = true;
-    if (idx >= TOTAL) {
-      const lastText = document.getElementById('t' + (TOTAL - 1));
-      const cur = lastText.querySelector('.cursor');
-      if (cur) cur.remove();
-      document.getElementById('skipBtn').classList.add('hidden');
-      document.getElementById('letterSign').classList.add('visible');
+    document.getElementById('startBtn').addEventListener('click', () => {
+      bgMusic.volume = 0.5;
+      bgMusic.play().catch(e => console.log('Audio error:', e));
+      showScreen('letterScreen');
+      setTimeout(() => typeParagraph(0), 400);
+    });
+
+    const parts = [
+      "सबसे पहले मैं आपसे दिल से माफी मांगना चाहता हूँ। कुछ महीने पहले मेरे इंस्टाग्राम अकाउंट पर एक AI-generated फोटो थी जिसमें आपकी बेटी की फोटो का इस्तेमाल हो गया था। मुझे समझ है कि यह चीज आपको बिल्कुल अच्छी नहीं लगी होगी और इससे आपको गुस्सा या असहज महसूस हुआ होगा। इसके लिए मैं sincerely आपसे sorry कहना चाहता हूँ।",
+      "मैं एक बात साफ करना चाहता हूँ कि मेरा intention बिल्कुल भी गलत नहीं था। वह फोटो मैंने कहीं भी publicly share नहीं की थी। मेरा Instagram account private है और वहाँ practically कोई और access भी नहीं था। वह बस मेरे अकाउंट पर एक पोस्ट के रूप में पड़ी हुई थी। फिर भी अगर उस वजह से आपको या आपके परिवार को बुरा लगा, तो उसकी पूरी responsibility मैं लेता हूँ और उसके लिए दिल से माफी मांगता हूँ।",
+      "आंटी जी, मैं आपकी बेटी और आपके पूरे परिवार की बहुत respect करता हूँ। मैं ऐसा लड़का नहीं हूँ जो आजकल के कुछ temporary relationships की तरह किसी के साथ थोड़े समय के लिए जुड़कर बाद में सब खत्म कर दे। मेरा mindset वैसा बिल्कुल नहीं है। अगर मेरे मन में किसी के लिए सम्मान या पसंद होती है तो वह चीज serious और respectful तरीके से ही होती है, कोई time-pass या temporary feeling नहीं होती।",
+      "मैं आपको अपने बारे में थोड़ा सा बताना चाहता हूँ ताकि आपको समझ आ सके कि मैं कैसा इंसान हूँ। मैं अभी अपने career पर focus कर रहा हूँ और पिछले काफी समय से अपने काम और अपने future को बनाने में लगा हुआ हूँ। मैं software engineering और technology से जुड़ा हुआ हूँ और अपना startup build करने पर काम कर रहा हूँ। मैं एक first-generation entrepreneur बनने की कोशिश कर रहा हूँ, इसलिए अभी मेरी life का बड़ा हिस्सा struggle, learning और hard work में जा रहा है।",
+      "मेरी lifestyle भी simple है। मुझे ना smoking की आदत है, ना drinking की और ना ही किसी गलत संगत में रहने की आदत है। मैं अपना ज़्यादातर समय सीखने, काम करने और अपने skills को improve करने में लगाता हूँ। गाँव में रहने के बावजूद मैं हमेशा कोशिश करता हूँ कि मेरा mindset positive और progressive रहे।",
+      "आपकी बेटी की बहन अंशिका से मेरी कुछ समय तक chat हुई थी, जिसमें मैंने उन्हें अपने बारे में काफी कुछ बताया था। उन्होंने मुझसे कई बातें पूछी थीं और मैंने उन्हें honestly जवाब दिया था। इसलिए अगर कभी आपको मेरे बारे में कुछ जानना हो तो आप उनसे भी पूछ सकती हैं, क्योंकि उन्होंने मेरे साथ काफी बातचीत की है।",
+      "एक और बात मैं बिल्कुल साफ करना चाहता हूँ। फिलहाल मेरा ऐसा कोई plan नहीं है कि मैं अभी किसी relationship के बारे में बात करूँ या किसी को किसी तरह की परेशानी में डालूँ। अभी मेरी priority सिर्फ अपना career बनाना, अपने परिवार की स्थिति को बेहतर करना और खुद को financially और personally strong बनाना है।",
+      "इसलिए अभी मैं सिर्फ अपनी गलती के लिए आपसे माफी मांगना चाहता हूँ। भविष्य में जब मैं अपनी life में stable हो जाऊँगा, अपने काम में successful हो जाऊँगा और जब समय सही होगा, तभी मैं किसी भी बात को लेकर आगे सोचूँगा। अभी के समय में मेरा focus सिर्फ मेहनत करना और खुद को बेहतर बनाना है।",
+      "आंटी जी, अगर मेरे इस message में लिखी किसी भी बात से आपको बुरा लगे या आपको ऐसा लगे कि मुझे यह message नहीं भेजना चाहिए था, तो उसके लिए भी मैं पहले से ही माफी चाहता हूँ। मेरा मकसद सिर्फ इतना है कि आपके मन में अगर मेरे लिए कोई गलतफहमी बन गई है तो उसे clear कर सकूँ।",
+      "आपका गुस्सा बिल्कुल समझ में आता है और आपकी जगह कोई भी माता-पिता होते तो शायद वही महसूस करते। इसलिए मैं एक बार फिर sincerely आपसे sorry कहना चाहता हूँ।",
+      "बस यही दुआ है कि आपके मन में मेरे लिए कोई बुराई न रहे। आपके परिवार में हमेशा खुशियाँ और अच्छाई बनी रहे। आपका आशीर्वाद मिले — इससे बड़ी बात मेरे लिए कोई नहीं।"
+    ];
+
+    const TOTAL = parts.length;
+    let isTyping = false;
+    let typeTimeout = null;
+    const scroll = document.getElementById('letterScroll');
+
+    let autoScrollEnabled = true;
+    let wheelTimer = null;
+
+    scroll.addEventListener('touchstart', () => { autoScrollEnabled = false; }, { passive: true });
+    scroll.addEventListener('touchend', () => { autoScrollEnabled = true; }, { passive: true });
+    scroll.addEventListener('wheel', () => {
+      autoScrollEnabled = false;
+      clearTimeout(wheelTimer);
+      wheelTimer = setTimeout(() => { autoScrollEnabled = true; }, 1000);
+    }, { passive: true });
+
+    function autoScroll() {
+      if (autoScrollEnabled) scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function burstBlessings() {
+      const items = ['🌸', '🙏', '✨', '🌼', '🌺'];
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          const el = document.createElement('span');
+          el.className = 'float-blessing';
+          el.textContent = items[Math.floor(Math.random() * items.length)];
+          el.style.left = (10 + Math.random() * 80) + '%';
+          el.style.bottom = (5 + Math.random() * 35) + '%';
+          el.style.animationDelay = (Math.random() * 0.4) + 's';
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 4000);
+        }, i * 150);
+      }
+    }
+
+    function showOutro() {
+      showScreen('outroScreen');
+      burstBlessings();
+    }
+
+    function showAllInstant() {
+      clearTimeout(typeTimeout);
       isTyping = false;
-      setTimeout(showOutro, 1800);
-      return;
+      document.getElementById('skipBtn').classList.add('hidden');
+      for (let i = 0; i < TOTAL; i++) {
+        const textEl = document.getElementById('t' + i);
+        const cur = textEl.querySelector('.cursor');
+        if (cur) cur.remove();
+        textEl.textContent = parts[i];
+        document.getElementById('p' + i).classList.add('visible');
+      }
+      document.getElementById('letterSign').classList.add('visible');
+      scroll.scrollTop = scroll.scrollHeight;
+      setTimeout(showOutro, 800);
     }
 
-    const block = document.getElementById('p' + idx);
-    const textEl = document.getElementById('t' + idx);
-    const fullText = parts[idx];
-    let charIdx = 0;
+    function typeParagraph(idx) {
+      isTyping = true;
+      if (idx >= TOTAL) {
+        const lastText = document.getElementById('t' + (TOTAL - 1));
+        const cur = lastText.querySelector('.cursor');
+        if (cur) cur.remove();
+        document.getElementById('skipBtn').classList.add('hidden');
+        document.getElementById('letterSign').classList.add('visible');
+        isTyping = false;
+        setTimeout(showOutro, 1800);
+        return;
+      }
 
-    block.classList.add('visible');
-    textEl.innerHTML = '<span class="cursor"></span>';
+      const block = document.getElementById('p' + idx);
+      const textEl = document.getElementById('t' + idx);
+      const fullText = parts[idx];
+      let charIdx = 0;
 
-    function tick() {
-      if (charIdx < fullText.length) {
-        textEl.querySelector('.c
+      block.classList.add('visible');
+      textEl.innerHTML = '<span class="cursor"></span>';
+
+      function tick() {
+        if (charIdx < fullText.length) {
+          textEl.querySelector('.cursor').insertAdjacentText('beforebegin', fullText[charIdx]);
+          charIdx++;
+          const ch = fullText[charIdx - 1];
+          const delay = /[।]/.test(ch) ? 190 : /[,]/.test(ch) ? 90 : /[ ]/.test(ch) ? 28 : 42;
+          typeTimeout = setTimeout(tick, delay);
+          autoScroll();
+        } else {
+          const cur = textEl.querySelector('.cursor');
+          if (cur) cur.remove();
+          typeTimeout = setTimeout(() => typeParagraph(idx + 1), 320);
+        }
+      }
+      tick();
+    }
+
+    document.getElementById('skipBtn').addEventListener('click', showAllInstant);
+  </script>
+</body>
+
+</html>
