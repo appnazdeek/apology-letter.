@@ -58,70 +58,30 @@
       transition: background-color 0.4s ease;
     }
 
-    /* ── THEME TOGGLE ── */
-    .theme-toggle {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: rgba(255, 255, 255, 0.4);
-      border: none;
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      font-size: 1.4rem;
-      cursor: pointer;
-      z-index: 100;
-      backdrop-filter: blur(5px);
-      transition: transform 0.2s, background 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.1);
-    }
-
-    .dark-mode .theme-toggle {
-      background: rgba(0, 0, 0, 0.4);
-    }
-
-    .theme-toggle img {
-      width: 26px;
-      height: 26px;
-      object-fit: contain;
-      transition: filter 0.3s;
-    }
-
-    .dark-mode .theme-toggle img {
-      filter: invert(1);
-    }
-
     /* ── DYNAMIC BACKGROUNDS ── */
     .sky-container {
       position: fixed;
       inset: 0;
-      pointer-events: none;
       z-index: 0;
       overflow: hidden;
-      transition: opacity 0.8s ease;
     }
 
     #daySky {
-      opacity: 1;
-    }
-
-    .dark-mode #daySky {
-      opacity: 0;
+      background-color: var(--bg-color);
+      z-index: 0;
     }
 
     #nightSky {
-      opacity: 0;
+      background-color: #0f172a;
+      z-index: 1;
+      clip-path: inset(0 0 0 100%);
     }
 
-    .dark-mode #nightSky {
-      opacity: 1;
+    .sun,
+    .moon {
+      cursor: pointer;
+      pointer-events: auto;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* DAY SKY */
@@ -293,13 +253,32 @@
       justify-content: center;
       align-items: center;
       transition: opacity 0.6s ease, transform 0.6s ease;
-      z-index: 1;
+      z-index: 2;
+      pointer-events: none;
     }
 
     .screen.hidden {
       opacity: 0;
-      pointer-events: none;
       transform: scale(0.97);
+    }
+
+    .intro-ghost,
+    .intro-tag,
+    .intro-title,
+    .intro-sub,
+    .intro-btn,
+    .sticker-top,
+    .headline-box,
+    .skip-btn,
+    .letter-scroll,
+    .sticker-bottom,
+    .handle-text,
+    .outro-ghost,
+    .outro-title,
+    .outro-msg,
+    .outro-divider,
+    .outro-sign {
+      pointer-events: auto;
     }
 
     /* ── INTRO ── */
@@ -704,7 +683,7 @@
       type="audio/mpeg">
   </audio>
 
-  <button class="theme-toggle" id="themeToggle" title="Toggle Theme"></button>
+  <!-- Button removed -->
 
   <!-- DAY SKY -->
   <div class="sky-container" id="daySky">
@@ -802,25 +781,42 @@
     document.getElementById('handleText').textContent = fromHandle;
     document.querySelector('.outro-sign').textContent = fromHandle;
 
-    // ── 2. DARK MODE THEME TOGGLE ──
-    const themeToggle = document.getElementById('themeToggle');
+    // ── 2. DAY/NIGHT TOGGLE & ANIMATION ──
+    let isManualTheme = localStorage.getItem('apologyTheme') !== null;
     let isDark = localStorage.getItem('apologyTheme') === 'dark';
 
-    const iconSun = 'https://img.icons8.com/?size=100&id=64194&format=png&color=000000';
-    const iconMoon = 'https://img.icons8.com/?size=100&id=64215&format=png&color=000000';
+    function setNightProgress(percent) {
+      percent = Math.max(0, Math.min(100, percent));
+      document.getElementById('nightSky').style.clipPath = `inset(0 0 0 ${100 - percent}%)`;
 
-    if (isDark) document.body.classList.add('dark-mode');
-
-    function updateThemeIcon() {
-      themeToggle.innerHTML = `<img src="${isDark ? iconSun : iconMoon}" alt="Theme Icon">`;
+      const shouldBeDark = percent > 50;
+      if (shouldBeDark && !document.body.classList.contains('dark-mode')) {
+        document.body.classList.add('dark-mode');
+        isDark = true;
+      } else if (!shouldBeDark && document.body.classList.contains('dark-mode')) {
+        document.body.classList.remove('dark-mode');
+        isDark = false;
+      }
     }
-    updateThemeIcon();
 
-    themeToggle.addEventListener('click', () => {
-      isDark = !isDark;
-      document.body.classList.toggle('dark-mode', isDark);
-      updateThemeIcon();
-      localStorage.setItem('apologyTheme', isDark ? 'dark' : 'light');
+    if (isManualTheme) {
+      setNightProgress(isDark ? 100 : 0);
+      setTimeout(() => document.getElementById('nightSky').style.transition = 'clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1)', 50);
+    } else {
+      setNightProgress(0);
+      setTimeout(() => document.getElementById('nightSky').style.transition = 'clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1)', 50);
+    }
+
+    document.querySelector('.sun').addEventListener('click', () => {
+      isManualTheme = true;
+      setNightProgress(100);
+      localStorage.setItem('apologyTheme', 'dark');
+    });
+
+    document.querySelector('.moon').addEventListener('click', () => {
+      isManualTheme = true;
+      setNightProgress(0);
+      localStorage.setItem('apologyTheme', 'light');
     });
 
     // ── 3. DYNAMIC BACKGROUND EFFECTS ──
@@ -980,6 +976,7 @@
     function showAllInstant() {
       clearTimeout(typeTimeout);
       isTyping = false;
+      if (!isManualTheme) setNightProgress(100);
       document.getElementById('skipBtn').classList.add('hidden');
       for (let i = 0; i < TOTAL; i++) {
         const textEl = document.getElementById('t' + i);
@@ -1025,6 +1022,7 @@
         } else {
           const cur = textEl.querySelector('.cursor');
           if (cur) cur.remove();
+          if (!isManualTheme) setNightProgress(((idx + 1) / TOTAL) * 100);
           typeTimeout = setTimeout(() => typeParagraph(idx + 1), 320);
         }
       }
