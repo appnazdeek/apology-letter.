@@ -4,48 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>A Heartfelt Sorry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Maku&family=Dancing+Script:wght@600;700&family=Caveat:wght@600;700&family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600&family=Dancing+Script:wght@600;700&family=Caveat:wght@600;700&family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body {
+      height: 100%;
+    }
+
     body {
       background-color: rgb(255, 216, 235);
-      min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding: 30px 16px 60px;
-      font-family: 'Maku', 'Noto Sans Devanagari', sans-serif;
+      padding: 28px 16px 40px;
+      font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif;
     }
 
     .card {
       width: 100%;
-      max-width: 640px;
+      max-width: 620px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      height: calc(100vh - 68px);
     }
 
-    /* ── TOP AREA ── */
+    /* TOP */
     .top-area {
-      width: 100%;
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 0 6px 24px;
+      padding-bottom: 16px;
+      flex-shrink: 0;
     }
 
     .sticker-top {
-      width: 110px;
+      width: 105px;
       flex-shrink: 0;
       object-fit: contain;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
     }
 
     .headline-box {
       background: white;
       border-radius: 18px;
-      padding: 16px 20px;
+      padding: 15px 20px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
       flex: 1;
     }
@@ -58,120 +60,101 @@
       line-height: 1.45;
     }
 
-    /* ── PROGRESS DOTS ── */
-    .progress {
+    /* SKIP */
+    .skip-wrap {
       display: flex;
-      justify-content: center;
-      gap: 8px;
-      padding: 4px 0 18px;
+      justify-content: flex-end;
+      padding-bottom: 8px;
+      flex-shrink: 0;
     }
-    .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: rgba(214,63,123,0.2);
-      transition: background 0.35s;
-    }
-    .dot.done   { background: #d63f7b; }
-    .dot.active { background: #f4a0c0; }
 
-    /* ── LETTER AREA ── */
-    .letter-area {
-      width: 100%;
-      min-height: 300px;
-      padding: 0 8px 10px;
+    .skip-btn {
+      background: transparent;
+      border: 1.5px solid #d63f7b;
+      color: #d63f7b;
+      border-radius: 50px;
+      padding: 5px 18px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
     }
+    .skip-btn:hover { background: #d63f7b; color: white; }
+    .skip-btn.hidden { visibility: hidden; pointer-events: none; }
+
+    /* SCROLLABLE LETTER */
+    .letter-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 4px 12px;
+      scrollbar-width: thin;
+      scrollbar-color: #f4a0c0 transparent;
+    }
+    .letter-scroll::-webkit-scrollbar { width: 4px; }
+    .letter-scroll::-webkit-scrollbar-thumb { background: #f4a0c0; border-radius: 4px; }
 
     .salutation {
-      font-family: 'Maku', 'Noto Sans Devanagari', sans-serif;
+      font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif;
       font-size: 1.05rem;
-      font-weight: 500;
+      font-weight: 600;
       color: #333;
       margin-bottom: 16px;
-      display: none;
+      padding: 0 4px;
     }
 
-    .message-block {
-      display: none;
-    }
-    .message-block.active {
+    .para-block {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      animation: fadeUp 0.4s ease;
+      margin-bottom: 18px;
+      opacity: 0;
+      transition: opacity 0.35s;
+      padding: 0 4px;
     }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .para-block.visible { opacity: 1; }
 
     .bullet-dot {
       flex-shrink: 0;
       width: 7px; height: 7px;
       background: #d63f7b;
       border-radius: 50%;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
-    .typing-text {
-      font-family: 'Maku', 'Noto Sans Devanagari', sans-serif;
-      font-size: 1rem;
+    .para-text {
+      font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.97rem;
+      font-weight: 400;
       color: #2d2d2d;
-      line-height: 1.95;
+      line-height: 2;
       flex: 1;
-      min-height: 30px;
     }
 
     .cursor {
       display: inline-block;
       width: 2px;
-      height: 1.1em;
+      height: 1em;
       background: #d63f7b;
-      margin-left: 2px;
+      margin-left: 1px;
       vertical-align: middle;
-      animation: blink 0.65s infinite;
+      animation: blink 0.7s infinite;
     }
     @keyframes blink {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0; }
     }
 
-    /* ── NEXT BUTTON ── */
-    .btn-wrap {
-      display: none;
-      justify-content: flex-end;
-      width: 100%;
-      padding: 16px 8px 6px;
-    }
-    .btn-wrap.visible { display: flex; }
-
-    .next-btn {
-      background: #d63f7b;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      padding: 11px 30px;
-      font-family: 'Caveat', cursive;
-      font-size: 1.25rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(214,63,123,0.32);
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .next-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(214,63,123,0.42);
-    }
-    .next-btn:active { transform: translateY(0); }
-
-    /* ── BOTTOM AREA ── */
+    /* BOTTOM */
     .bottom-area {
-      width: 100%;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       gap: 12px;
-      padding: 24px 10px 0;
+      padding: 14px 8px 0;
+      flex-shrink: 0;
+      border-top: 1px solid rgba(214,63,123,0.15);
+      margin-top: 6px;
     }
 
     .sign-text {
@@ -183,15 +166,15 @@
     }
 
     .sticker-bottom {
-      width: 70px;
+      width: 62px;
       object-fit: contain;
       filter: drop-shadow(0 3px 6px rgba(0,0,0,0.08));
     }
 
     .handle-text {
       font-family: 'Dancing Script', cursive;
-      font-size: 1.15rem;
-      color: #999;
+      font-size: 1.1rem;
+      color: #aaa;
     }
   </style>
 </head>
@@ -200,48 +183,41 @@
 
   <!-- TOP -->
   <div class="top-area">
-    <img
-      class="sticker-top"
+    <img class="sticker-top"
       src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/one.png"
-      alt="sorry ghost"
-    />
+      alt="sorry ghost" />
     <div class="headline-box">
       <p>A heartfelt sorry,<br/>I meant no hurt.</p>
     </div>
   </div>
 
-  <!-- DOTS -->
-  <div class="progress" id="progressDots"></div>
-
-  <!-- LETTER -->
-  <div class="letter-area">
-    <div class="salutation" id="salutation">नमस्ते आंटी जी,</div>
-
-    <div class="message-block" id="block-0"><span class="bullet-dot"></span><span class="typing-text" id="text-0"></span></div>
-    <div class="message-block" id="block-1"><span class="bullet-dot"></span><span class="typing-text" id="text-1"></span></div>
-    <div class="message-block" id="block-2"><span class="bullet-dot"></span><span class="typing-text" id="text-2"></span></div>
-    <div class="message-block" id="block-3"><span class="bullet-dot"></span><span class="typing-text" id="text-3"></span></div>
-    <div class="message-block" id="block-4"><span class="bullet-dot"></span><span class="typing-text" id="text-4"></span></div>
-    <div class="message-block" id="block-5"><span class="bullet-dot"></span><span class="typing-text" id="text-5"></span></div>
-    <div class="message-block" id="block-6"><span class="bullet-dot"></span><span class="typing-text" id="text-6"></span></div>
-    <div class="message-block" id="block-7"><span class="bullet-dot"></span><span class="typing-text" id="text-7"></span></div>
-    <div class="message-block" id="block-8"><span class="bullet-dot"></span><span class="typing-text" id="text-8"></span></div>
-    <div class="message-block" id="block-9"><span class="bullet-dot"></span><span class="typing-text" id="text-9"></span></div>
+  <!-- SKIP -->
+  <div class="skip-wrap">
+    <button class="skip-btn" id="skipBtn">Skip ⏭</button>
   </div>
 
-  <!-- NEXT BTN -->
-  <div class="btn-wrap" id="btnWrap">
-    <button class="next-btn" id="nextBtn">Next →</button>
+  <!-- SCROLLABLE CONTENT -->
+  <div class="letter-scroll" id="letterScroll">
+    <p class="salutation">नमस्ते आंटी जी,</p>
+
+    <div class="para-block" id="p0"><span class="bullet-dot"></span><span class="para-text" id="t0"></span></div>
+    <div class="para-block" id="p1"><span class="bullet-dot"></span><span class="para-text" id="t1"></span></div>
+    <div class="para-block" id="p2"><span class="bullet-dot"></span><span class="para-text" id="t2"></span></div>
+    <div class="para-block" id="p3"><span class="bullet-dot"></span><span class="para-text" id="t3"></span></div>
+    <div class="para-block" id="p4"><span class="bullet-dot"></span><span class="para-text" id="t4"></span></div>
+    <div class="para-block" id="p5"><span class="bullet-dot"></span><span class="para-text" id="t5"></span></div>
+    <div class="para-block" id="p6"><span class="bullet-dot"></span><span class="para-text" id="t6"></span></div>
+    <div class="para-block" id="p7"><span class="bullet-dot"></span><span class="para-text" id="t7"></span></div>
+    <div class="para-block" id="p8"><span class="bullet-dot"></span><span class="para-text" id="t8"></span></div>
+    <div class="para-block" id="p9"><span class="bullet-dot"></span><span class="para-text" id="t9"></span></div>
   </div>
 
-  <!-- BOTTOM -->
+  <!-- PERMANENT BOTTOM -->
   <div class="bottom-area">
-    <div class="sign-text">धन्यवाद<br/>@राकेश</div>
-    <img
-      class="sticker-bottom"
+    <div class="sign-text">धन्यवाद<br/>राकेश</div>
+    <img class="sticker-bottom"
       src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/two.png"
-      alt="ghost with flower"
-    />
+      alt="ghost with flower" />
     <span class="handle-text">@rakeshsinghce</span>
   </div>
 
@@ -249,11 +225,11 @@
 
 <script>
   const parts = [
-    "सबसे पहले मैं आपसे दिल से माफी मांगना चाहता हूँ। कुछ महीने पहले मेरे Instagram अकाउंट पर एक AI-generated फोटो थी जिसमें आपकी बेटी की फोटो का इस्तेमाल हो गया था। मुझे समझ है कि यह चीज आपको बिल्कुल अच्छी नहीं लगी होगी और इससे आपको गुस्सा या असहज महसूस हुआ होगा। इसके लिए मैं sincerely आपसे sorry कहना चाहता हूँ।",
+    "सबसे पहले मैं आपसे दिल से माफी मांगना चाहता हूँ। कुछ महीने पहले मेरे इंस्टाग्राम अकाउंट पर एक AI-generated फोटो थी जिसमें आपकी बेटी की फोटो का इस्तेमाल हो गया था। मुझे समझ है कि यह चीज आपको बिल्कुल अच्छी नहीं लगी होगी और इससे आपको गुस्सा या असहज महसूस हुआ होगा। इसके लिए मैं sincerely आपसे sorry कहना चाहता हूँ।",
     "मैं एक बात साफ करना चाहता हूँ कि मेरा intention बिल्कुल भी गलत नहीं था। वह फोटो मैंने कहीं भी publicly share नहीं की थी। मेरा Instagram account private है और वहाँ practically कोई और access भी नहीं था। वह बस मेरे अकाउंट पर एक पोस्ट के रूप में पड़ी हुई थी। फिर भी अगर उस वजह से आपको या आपके परिवार को बुरा लगा, तो उसकी पूरी responsibility मैं लेता हूँ और उसके लिए दिल से माफी मांगता हूँ।",
     "आंटी जी, मैं आपकी बेटी और आपके पूरे परिवार की बहुत respect करता हूँ। मैं ऐसा लड़का नहीं हूँ जो आजकल के कुछ temporary relationships की तरह किसी के साथ थोड़े समय के लिए जुड़कर बाद में सब खत्म कर दे। मेरा mindset वैसा बिल्कुल नहीं है। अगर मेरे मन में किसी के लिए सम्मान या पसंद होती है तो वह चीज serious और respectful तरीके से ही होती है, कोई time-pass या temporary feeling नहीं होती।",
     "मैं आपको अपने बारे में थोड़ा सा बताना चाहता हूँ ताकि आपको समझ आ सके कि मैं कैसा इंसान हूँ। मैं अभी अपने career पर focus कर रहा हूँ और पिछले काफी समय से अपने काम और अपने future को बनाने में लगा हुआ हूँ। मैं software engineering और technology से जुड़ा हुआ हूँ और अपना startup build करने पर काम कर रहा हूँ। मैं एक first-generation entrepreneur बनने की कोशिश कर रहा हूँ, इसलिए अभी मेरी life का बड़ा हिस्सा struggle, learning और hard work में जा रहा है।",
-    "मेरी lifestyle भी simple है। मुझे ना smoking की आदत है, ना drinking की और ना ही किसी गलत संगत में रहने की आदत है। मैं अपना ज्यादातर समय सीखने, काम करने और अपने skills को improve करने में लगाता हूँ। गाँव में रहने के बावजूद मैं हमेशा कोशिश करता हूँ कि मेरा mindset positive और progressive रहे।",
+    "मेरी lifestyle भी simple है। मुझे ना smoking की आदत है, ना drinking की और ना ही किसी गलत संगत में रहने की आदत है। मैं अपना ज़्यादातर समय सीखने, काम करने और अपने skills को improve करने में लगाता हूँ। गाँव में रहने के बावजूद मैं हमेशा कोशिश करता हूँ कि मेरा mindset positive और progressive रहे।",
     "आपकी बेटी की बहन अंशिका से मेरी कुछ समय तक chat हुई थी, जिसमें मैंने उन्हें अपने बारे में काफी कुछ बताया था। उन्होंने मुझसे कई बातें पूछी थीं और मैंने उन्हें honestly जवाब दिया था। इसलिए अगर कभी आपको मेरे बारे में कुछ जानना हो तो आप उनसे भी पूछ सकती हैं, क्योंकि उन्होंने मेरे साथ काफी बातचीत की है।",
     "एक और बात मैं बिल्कुल साफ करना चाहता हूँ। फिलहाल मेरा ऐसा कोई plan नहीं है कि मैं अभी किसी relationship के बारे में बात करूँ या किसी को किसी तरह की परेशानी में डालूँ। अभी मेरी priority सिर्फ अपना career बनाना, अपने परिवार की स्थिति को बेहतर करना और खुद को financially और personally strong बनाना है।",
     "इसलिए अभी मैं सिर्फ अपनी गलती के लिए आपसे माफी मांगना चाहता हूँ। भविष्य में जब मैं अपनी life में stable हो जाऊँगा, अपने काम में successful हो जाऊँगा और जब समय सही होगा, तभी मैं किसी भी बात को लेकर आगे सोचूँगा। अभी के समय में मेरा focus सिर्फ मेहनत करना और खुद को बेहतर बनाना है।",
@@ -262,82 +238,63 @@
   ];
 
   const TOTAL = parts.length;
-  let current = 0;
-  let typing = false;
+  let isTyping = true;
   let typeTimeout = null;
+  const scroll = document.getElementById('letterScroll');
 
-  // Build dots
-  const dotsEl = document.getElementById('progressDots');
-  for (let i = 0; i < TOTAL; i++) {
-    const d = document.createElement('span');
-    d.className = 'dot';
-    d.id = 'dot-' + i;
-    dotsEl.appendChild(d);
-  }
-
-  function updateDots() {
+  function showAllInstant() {
+    clearTimeout(typeTimeout);
+    isTyping = false;
+    document.getElementById('skipBtn').classList.add('hidden');
     for (let i = 0; i < TOTAL; i++) {
-      const d = document.getElementById('dot-' + i);
-      d.className = 'dot' + (i < current ? ' done' : i === current ? ' active' : '');
+      const textEl = document.getElementById('t' + i);
+      const cur = textEl.querySelector('.cursor');
+      if (cur) cur.remove();
+      textEl.textContent = parts[i];
+      document.getElementById('p' + i).classList.add('visible');
     }
   }
 
-  function showBlock(index) {
-    for (let i = 0; i < TOTAL; i++) {
-      document.getElementById('block-' + i).classList.remove('active');
-      document.getElementById('text-' + i).innerHTML = '';
+  function typeParagraph(idx) {
+    if (!isTyping) return;
+    if (idx >= TOTAL) {
+      const lastText = document.getElementById('t' + (TOTAL - 1));
+      const cur = lastText.querySelector('.cursor');
+      if (cur) cur.remove();
+      document.getElementById('skipBtn').classList.add('hidden');
+      isTyping = false;
+      return;
     }
-    document.getElementById('salutation').style.display = index === 0 ? 'block' : 'none';
-    document.getElementById('block-' + index).classList.add('active');
-    document.getElementById('btnWrap').classList.remove('visible');
-    updateDots();
-    typeText(index);
-  }
 
-  function typeText(index) {
-    typing = true;
-    const textEl = document.getElementById('text-' + index);
-    const fullText = parts[index];
-    let i = 0;
+    const block = document.getElementById('p' + idx);
+    const textEl = document.getElementById('t' + idx);
+    const fullText = parts[idx];
+    let charIdx = 0;
+
+    block.classList.add('visible');
     textEl.innerHTML = '<span class="cursor"></span>';
 
     function tick() {
-      if (i < fullText.length) {
-        textEl.querySelector('.cursor').insertAdjacentText('beforebegin', fullText[i]);
-        i++;
-        const delay = /[।,।!?]/.test(fullText[i - 1]) ? 65 : 30;
+      if (!isTyping) return;
+      if (charIdx < fullText.length) {
+        textEl.querySelector('.cursor').insertAdjacentText('beforebegin', fullText[charIdx]);
+        charIdx++;
+        const ch = fullText[charIdx - 1];
+        const delay = /[।]/.test(ch) ? 200 : /[,]/.test(ch) ? 100 : /[ ]/.test(ch) ? 30 : 42;
         typeTimeout = setTimeout(tick, delay);
+        scroll.scrollTop = scroll.scrollHeight;
       } else {
         const cur = textEl.querySelector('.cursor');
         if (cur) cur.remove();
-        typing = false;
-        document.getElementById('btnWrap').classList.add('visible');
-        document.getElementById('nextBtn').textContent = index === TOTAL - 1 ? '✓ Done' : 'Next →';
+        typeTimeout = setTimeout(() => typeParagraph(idx + 1), 350);
       }
     }
     tick();
   }
 
-  document.getElementById('nextBtn').addEventListener('click', () => {
-    if (typing) {
-      clearTimeout(typeTimeout);
-      typing = false;
-      const textEl = document.getElementById('text-' + current);
-      const cur = textEl.querySelector('.cursor');
-      if (cur) cur.remove();
-      textEl.textContent = parts[current];
-      document.getElementById('btnWrap').classList.add('visible');
-      document.getElementById('nextBtn').textContent = current === TOTAL - 1 ? '✓ Done' : 'Next →';
-      return;
-    }
-    if (current < TOTAL - 1) {
-      current++;
-      showBlock(current);
-    }
-  });
+  document.getElementById('skipBtn').addEventListener('click', showAllInstant);
 
-  showBlock(0);
+  typeParagraph(0);
 </script>
 </body>
 </html>
-  
