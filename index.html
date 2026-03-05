@@ -4,21 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>A Heartfelt Sorry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Lilita+One&family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&family=Crafty+Girls&family=Kalam:wght@300;400;700&family=Lilita+One&family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-      height: 100%;
-    }
+    html { height: 100%; }
 
     body {
       background-color: rgb(255, 216, 235);
       display: flex;
       justify-content: center;
-      /* use dvh for mobile browsers — accounts for browser chrome */
       height: 100dvh;
-      height: 100vh; /* fallback */
+      height: 100vh;
       overflow: hidden;
       font-family: 'Kalam', 'Noto Sans Devanagari', cursive;
     }
@@ -28,10 +25,7 @@
       max-width: 620px;
       display: flex;
       flex-direction: column;
-      /* safe area for notch/home bar phones */
-      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 12px);
-      padding-top: max(env(safe-area-inset-top), 16px);
-      padding-bottom: max(env(safe-area-inset-bottom), 12px);
+      padding: max(env(safe-area-inset-top), 16px) 16px max(env(safe-area-inset-bottom), 12px);
       overflow: hidden;
     }
 
@@ -60,10 +54,11 @@
     }
 
     .headline-box p {
-      font-family: 'Lilita One', cursive;
-      font-size: 1.25rem;
+      /* Crafty Girls for the headline */
+      font-family: 'Crafty Girls', cursive;
+      font-size: 1.2rem;
       color: #c0396d;
-      line-height: 1.4;
+      line-height: 1.55;
     }
 
     /* ── SKIP ── */
@@ -97,7 +92,7 @@
       padding: 2px 4px 8px;
       scrollbar-width: thin;
       scrollbar-color: #f4a0c0 transparent;
-      min-height: 0; /* critical for flex shrink */
+      min-height: 0;
     }
     .letter-scroll::-webkit-scrollbar { width: 3px; }
     .letter-scroll::-webkit-scrollbar-thumb { background: #f4a0c0; border-radius: 4px; }
@@ -139,7 +134,6 @@
       flex: 1;
     }
 
-    /* signature inside letter */
     .letter-sign {
       opacity: 0;
       transition: opacity 0.4s;
@@ -151,7 +145,6 @@
     }
     .letter-sign.visible { opacity: 1; }
 
-    /* cursor */
     .cursor {
       display: inline-block;
       width: 2px;
@@ -166,7 +159,7 @@
       50%       { opacity: 0; }
     }
 
-    /* ── BOTTOM — always pinned ── */
+    /* ── BOTTOM ── */
     .bottom-area {
       display: flex;
       justify-content: flex-end;
@@ -176,8 +169,7 @@
       flex-shrink: 0;
       border-top: 1px solid rgba(214,63,123,0.15);
       margin-top: 4px;
-      /* ensure it never gets pushed off */
-      min-height: 70px;
+      min-height: 68px;
     }
 
     .sticker-bottom {
@@ -186,11 +178,14 @@
       filter: drop-shadow(0 3px 6px rgba(0,0,0,0.08));
     }
 
+    /* Corinthia signature font for handle */
     .handle-text {
-      font-family: 'Lilita One', cursive;
-      font-size: 0.95rem;
+      font-family: 'Corinthia', cursive;
+      font-size: 1.9rem;
+      font-weight: 700;
       color: #c0396d;
-      opacity: 0.8;
+      line-height: 1;
+      letter-spacing: 0.5px;
     }
   </style>
 </head>
@@ -212,9 +207,9 @@
     <button class="skip-btn" id="skipBtn">Skip ⏭</button>
   </div>
 
-  <!-- SCROLLABLE LETTER -->
+  <!-- LETTER -->
   <div class="letter-scroll" id="letterScroll">
-    <p class="salutation">नमस्ते आंटी जी, मैं राकेशसिंह</p>
+    <p class="salutation">नमस्ते आंटी जी,</p>
 
     <div class="para-block" id="p0"><span class="bullet-dot"></span><span class="para-text" id="t0"></span></div>
     <div class="para-block" id="p1"><span class="bullet-dot"></span><span class="para-text" id="t1"></span></div>
@@ -232,7 +227,7 @@
     </div>
   </div>
 
-  <!-- BOTTOM — always visible -->
+  <!-- BOTTOM -->
   <div class="bottom-area">
     <img class="sticker-bottom"
       src="https://raw.githubusercontent.com/appnazdeek/apology-letter/main/two.png"
@@ -261,19 +256,35 @@
   let typeTimeout = null;
   const scroll = document.getElementById('letterScroll');
 
-  // User scroll control
-  let userScrolled = false;
-  scroll.addEventListener('touchstart', () => { userScrolled = true; });
-  scroll.addEventListener('wheel', () => { userScrolled = true; });
-  scroll.addEventListener('scroll', () => {
-    const atBottom = scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight < 50;
-    if (atBottom) userScrolled = false;
-  });
+  // ── Scroll control logic ──
+  // userTouching = finger is currently on screen
+  // autoScrollEnabled = should we auto-scroll on each tick
+  let userTouching = false;
+  let autoScrollEnabled = true;
+
+  // Touch start → immediately stop auto-scroll
+  scroll.addEventListener('touchstart', () => {
+    userTouching = true;
+    autoScrollEnabled = false;
+  }, { passive: true });
+
+  // Touch end → resume auto-scroll (no jump, typing continues from where it is)
+  scroll.addEventListener('touchend', () => {
+    userTouching = false;
+    autoScrollEnabled = true;
+  }, { passive: true });
+
+  // Desktop mouse wheel → stop while scrolling, resume after 1s idle
+  let wheelTimer = null;
+  scroll.addEventListener('wheel', () => {
+    autoScrollEnabled = false;
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => { autoScrollEnabled = true; }, 1000);
+  }, { passive: true });
 
   function autoScroll() {
-    if (!userScrolled) {
-      scroll.scrollTop = scroll.scrollHeight;
-    }
+    if (!autoScrollEnabled) return;
+    scroll.scrollTop = scroll.scrollHeight;
   }
 
   function showAllInstant() {
@@ -333,4 +344,5 @@
   typeParagraph(0);
 </script>
 </body>
-</html>
+                                                                      </html>
+  
